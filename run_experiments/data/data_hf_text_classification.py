@@ -23,9 +23,18 @@ def _normalize_split(raw_dataset):
 
 
 def _label_to_int(value, label_to_id):
-    if isinstance(value, int):
-        return value
+    try:
+        numeric_value = float(value)
+        if numeric_value.is_integer():
+            numeric_label = str(int(numeric_value))
+            if numeric_label in label_to_id:
+                return label_to_id[numeric_label]
+    except (TypeError, ValueError):
+        pass
+
     value = str(value).strip()
+    if value in label_to_id:
+        return label_to_id[value]
     if value.isdigit():
         return int(value)
     return label_to_id[value]
@@ -90,24 +99,44 @@ def prepare_hf_text_classification_data(
     val_file = os.path.join(config.SAVE_PATH_CONCEPTS, "val_data.pkl")
     test_file = os.path.join(config.SAVE_PATH_CONCEPTS, "test_data.pkl")
     dictionary_file = os.path.join(config.SAVE_PATH_CONCEPTS, f"dictionary_{cache_name}.json")
+    metadata_file = os.path.join(config.SAVE_PATH_CONCEPTS, "dataset_metadata.json")
+    expected_metadata = {
+        "dataset_name": dataset_name,
+        "text_col": text_col,
+        "label_col": label_col,
+        "label_names": label_names,
+    }
 
-    if os.path.exists(train_file) and os.path.exists(val_file) and os.path.exists(test_file):
+    cache_exists = os.path.exists(train_file) and os.path.exists(val_file) and os.path.exists(test_file)
+    metadata_matches = False
+    if cache_exists and os.path.exists(metadata_file):
+        with open(metadata_file) as f:
+            metadata_matches = json.load(f) == expected_metadata
+
+    if cache_exists and metadata_matches:
         print("Chargement des fichiers sauvegardés...")
         train_df = pd.read_pickle(train_file)
         val_df = pd.read_pickle(val_file)
         test_df = pd.read_pickle(test_file)
     else:
+        if cache_exists:
+            print("Cache dataset incompatible avec la source courante; recalcul des splits...")
         print(f"Prétraitement du dataset Hugging Face: {dataset_name}")
         label_to_id = {label: idx for idx, label in enumerate(label_names)}
         with open(dictionary_file, "w") as f:
             json.dump(label_to_id, f, indent=2)
+        with open(metadata_file, "w") as f:
+            json.dump(expected_metadata, f, indent=2)
 
         raw_dataset = _normalize_split(load_dataset(dataset_name))
         train_source = raw_dataset["train"]
         train_df_all = _to_frame(train_source, text_col, label_col, label_to_id)
-
+        validation_df = None
         if "validation" in raw_dataset:
-            val_df = _to_frame(raw_dataset["validation"], text_col, label_col, label_to_id)
+            validation_df = _to_frame(raw_dataset["validation"], text_col, label_col, label_to_id)
+
+        if validation_df is not None:
+            val_df = validation_df
             train_df = train_df_all
         else:
             train_df, val_df = train_test_split(
@@ -120,7 +149,21 @@ def prepare_hf_text_classification_data(
             val_df = val_df.reset_index(drop=True)
 
         if "test" in raw_dataset:
-            test_df = _to_frame(raw_dataset["test"], text_col, label_col, label_to_id)
+            try:
+                test_df = _to_frame(raw_dataset["test"], text_col, label_col, label_to_id)
+            except KeyError:
+                if validation_df is None:
+                    raise
+                print("Test split labels are not usable; using validation as test and splitting train for validation.")
+                test_df = validation_df.reset_index(drop=True)
+                train_df, val_df = train_test_split(
+                    train_df_all,
+                    test_size=0.2,
+                    random_state=getattr(config, "seed", 42),
+                    stratify=train_df_all["label"],
+                )
+                train_df = train_df.reset_index(drop=True)
+                val_df = val_df.reset_index(drop=True)
         else:
             val_df, test_df = train_test_split(
                 val_df,

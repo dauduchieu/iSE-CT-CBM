@@ -19,8 +19,17 @@ def load_config(model_name,dataset):
         elif dataset == 'stackoverflow':
             from config_stackoverflow import Config as Config_stackoverflow
             config = Config_stackoverflow()
+        elif dataset == 'medical_2':
+            from config_medical_2 import Config as Config_medical_2
+            config = Config_medical_2()
+        elif dataset == 'ecom':
+            from config_ecom import Config as Config_ecom
+            config = Config_ecom()
+        elif dataset == 'sst2':
+            from config_sst2 import Config as Config_sst2
+            config = Config_sst2()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2']")
     elif model_name == 'deberta-large':
         if dataset == 'movies':
             from config_movies_deberta import Config as Config_movies
@@ -40,8 +49,17 @@ def load_config(model_name,dataset):
         elif dataset == 'stackoverflow':
             from config_stackoverflow_deberta import Config as Config_stackoverflow
             config = Config_stackoverflow()
+        elif dataset == 'medical_2':
+            from config_medical_2_deberta import Config as Config_medical_2
+            config = Config_medical_2()
+        elif dataset == 'ecom':
+            from config_ecom_deberta import Config as Config_ecom
+            config = Config_ecom()
+        elif dataset == 'sst2':
+            from config_sst2_deberta import Config as Config_sst2
+            config = Config_sst2()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2']")
     elif model_name == 'gemma':
         if dataset == 'movies':
             from config_movies_gemma import Config as Config_movies
@@ -61,8 +79,17 @@ def load_config(model_name,dataset):
         elif dataset == 'stackoverflow':
             from config_stackoverflow_gemma import Config as Config_stackoverflow
             config = Config_stackoverflow()
+        elif dataset == 'medical_2':
+            from config_medical_2_gemma import Config as Config_medical_2
+            config = Config_medical_2()
+        elif dataset == 'ecom':
+            from config_ecom_gemma import Config as Config_ecom
+            config = Config_ecom()
+        elif dataset == 'sst2':
+            from config_sst2_gemma import Config as Config_sst2
+            config = Config_sst2()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2']")
     else:
         raise ValueError("Entrez un nom de modèle valide parmi ['bert-base-uncased','deberta-large', 'gemma']")
 

@@ -12,10 +12,16 @@ def load_fc_prepare_data(dataset):
         from data_pubmed import prepare_pubmed_data as prepare_data
     elif dataset == 'stackoverflow':
         from data_stackoverflow import prepare_stackoverflow_data as prepare_data
+    elif dataset == 'medical_2':
+        from data_medical_2 import prepare_medical_2_data as prepare_data
+    elif dataset == 'ecom':
+        from data_ecom import prepare_ecom_data as prepare_data
+    elif dataset == 'sst2':
+        from data_sst2 import prepare_sst2_data as prepare_data
     elif dataset == 'n24':
         from data_n24 import prepare_n24_data as prepare_data
     else:
-        raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','n24']")
+        raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2','n24']")
     
     return prepare_data
 
