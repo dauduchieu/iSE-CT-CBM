@@ -13,8 +13,14 @@ def load_config(model_name,dataset):
         elif dataset == 'medical':
             from config_medical import Config as Config_medical
             config = Config_medical()
+        elif dataset == 'pubmed':
+            from config_pubmed import Config as Config_pubmed
+            config = Config_pubmed()
+        elif dataset == 'stackoverflow':
+            from config_stackoverflow import Config as Config_stackoverflow
+            config = Config_stackoverflow()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow']")
     elif model_name == 'deberta-large':
         if dataset == 'movies':
             from config_movies_deberta import Config as Config_movies
@@ -28,8 +34,14 @@ def load_config(model_name,dataset):
         elif dataset == 'medical':
             from config_medical_deberta import Config as Config_medical
             config = Config_medical()
+        elif dataset == 'pubmed':
+            from config_pubmed_deberta import Config as Config_pubmed
+            config = Config_pubmed()
+        elif dataset == 'stackoverflow':
+            from config_stackoverflow_deberta import Config as Config_stackoverflow
+            config = Config_stackoverflow()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow']")
     elif model_name == 'gemma':
         if dataset == 'movies':
             from config_movies_gemma import Config as Config_movies
@@ -43,8 +55,14 @@ def load_config(model_name,dataset):
         elif dataset == 'medical':
             from config_medical_gemma import Config as Config_medical
             config = Config_medical()
+        elif dataset == 'pubmed':
+            from config_pubmed_gemma import Config as Config_pubmed
+            config = Config_pubmed()
+        elif dataset == 'stackoverflow':
+            from config_stackoverflow_gemma import Config as Config_stackoverflow
+            config = Config_stackoverflow()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow']")
     else:
         raise ValueError("Entrez un nom de modèle valide parmi ['bert-base-uncased','deberta-large', 'gemma']")
 
