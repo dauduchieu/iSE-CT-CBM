@@ -76,12 +76,26 @@ def compute_cosine_matrix_and_metrics(df, text_column, embedder_model, embedder_
     else:
         cosine_path = None
 
-    # Calcul ou chargement de cosine_df
+    # Calcul ou chargement de cosine_df. The cache is only valid for the exact
+    # dataframe/index and concept set used to create it; Colab debug runs often
+    # change MAX_TRAIN_ROWS or rerun annotation, which makes old caches stale.
+    cosine_df = None
     if cosine_path and os.path.exists(cosine_path):
         print("Chargement de cosine_df depuis", cosine_path)
         with open(cosine_path, "rb") as f:
-            cosine_df = pickle.load(f)
-    else:
+            cached_cosine_df = pickle.load(f)
+
+        required_cols = {"text", "label", *cavs.keys()}
+        same_index = cached_cosine_df.index.equals(df.index)
+        same_length = len(cached_cosine_df) == len(df)
+        has_required_cols = required_cols.issubset(set(cached_cosine_df.columns))
+
+        if same_index and same_length and has_required_cols:
+            cosine_df = cached_cosine_df
+        else:
+            print("Cache cosine_df incompatible avec le dataframe courant; recalcul de cosine_df...")
+
+    if cosine_df is None:
         print("Calcul de cosine_df...")
         embedder_model.to(device)
         embedder_model.eval()
@@ -202,12 +216,25 @@ def compute_cosine_matrix_and_metrics_gemma_version(df, text_column, embedder_mo
     else:
         cosine_path = None
 
-    # Calcul ou chargement de cosine_df
+    # Calcul ou chargement de cosine_df. The cache is only valid for the exact
+    # dataframe/index and concept set used to create it.
+    cosine_df = None
     if cosine_path and os.path.exists(cosine_path):
         print("Chargement de cosine_df depuis", cosine_path)
         with open(cosine_path, "rb") as f:
-            cosine_df = pickle.load(f)
-    else:
+            cached_cosine_df = pickle.load(f)
+
+        required_cols = {"text", "label", *cavs.keys()}
+        same_index = cached_cosine_df.index.equals(df.index)
+        same_length = len(cached_cosine_df) == len(df)
+        has_required_cols = required_cols.issubset(set(cached_cosine_df.columns))
+
+        if same_index and same_length and has_required_cols:
+            cosine_df = cached_cosine_df
+        else:
+            print("Cache cosine_df incompatible avec le dataframe courant; recalcul de cosine_df...")
+
+    if cosine_df is None:
         print("Calcul de cosine_df...")
         embedder_model.to(device)
         embedder_model.eval()

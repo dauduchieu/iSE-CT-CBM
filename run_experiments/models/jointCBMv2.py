@@ -114,7 +114,10 @@ class JointModel:
 
     def train_model(self, train_loader, val_loader):
         start_time = time.time()
-        best_acc_score = 0
+        best_acc_score = float("-inf")
+        best_F1_score = 0.0
+        best_total_concept_accuracy = 0.0
+        total_concept_accuracy_kept = 0.0
         kept_epoch = 0
 
         # Dictionnaire pour stocker les prédictions et labels par concept
