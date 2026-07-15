@@ -483,7 +483,9 @@ class CustomDataset(Dataset2):
             for key, dummy_col in zip(self.additional_features_keys, self.additional_columns)
         }
 
-        encoding = self.tokenizer.encode_plus(
+        # Use the tokenizer callable instead of encode_plus so the dataset works
+        # with both older and newer Hugging Face tokenizer versions.
+        encoding = self.tokenizer(
             text,
             add_special_tokens=True,
             max_length=self.max_len,
@@ -509,7 +511,6 @@ def create_dataloader(df_filtre, tokenizer, max_len, batch_size, shuffle = True)
     # Utiliser cette instance dans le DataLoader
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
     return dataloader
-
 
 
 
