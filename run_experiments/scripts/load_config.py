@@ -28,8 +28,11 @@ def load_config(model_name,dataset):
         elif dataset == 'sst2':
             from config_sst2 import Config as Config_sst2
             config = Config_sst2()
+        elif dataset == 'uci':
+            from config_uci import Config as Config_uci
+            config = Config_uci()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2','uci']")
     elif model_name == 'deberta-large':
         if dataset == 'movies':
             from config_movies_deberta import Config as Config_movies
@@ -58,8 +61,11 @@ def load_config(model_name,dataset):
         elif dataset == 'sst2':
             from config_sst2_deberta import Config as Config_sst2
             config = Config_sst2()
+        elif dataset == 'uci':
+            from config_uci_deberta import Config as Config_uci
+            config = Config_uci()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2','uci']")
     elif model_name == 'gemma':
         if dataset == 'movies':
             from config_movies_gemma import Config as Config_movies
@@ -88,8 +94,11 @@ def load_config(model_name,dataset):
         elif dataset == 'sst2':
             from config_sst2_gemma import Config as Config_sst2
             config = Config_sst2()
+        elif dataset == 'uci':
+            from config_uci_gemma import Config as Config_uci
+            config = Config_uci()
         else:
-            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2']")
+            raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2','uci']")
     else:
         raise ValueError("Entrez un nom de modèle valide parmi ['bert-base-uncased','deberta-large', 'gemma']")
 

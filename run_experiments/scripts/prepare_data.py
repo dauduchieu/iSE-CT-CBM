@@ -18,10 +18,12 @@ def load_fc_prepare_data(dataset):
         from data_ecom import prepare_ecom_data as prepare_data
     elif dataset == 'sst2':
         from data_sst2 import prepare_sst2_data as prepare_data
+    elif dataset == 'uci':
+        from data_uci import prepare_uci_data as prepare_data
     elif dataset == 'n24':
         from data_n24 import prepare_n24_data as prepare_data
     else:
-        raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2','n24']")
+        raise ValueError("Entrez un nom de dataset valide parmi ['movies','agnews','dbpedia','medical','pubmed','stackoverflow','medical_2','ecom','sst2','uci','n24']")
     
     return prepare_data
 
